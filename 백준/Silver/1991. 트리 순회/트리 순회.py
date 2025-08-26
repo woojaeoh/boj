@@ -3,18 +3,11 @@ import sys
 input = sys.stdin.readline
 N = int(input())
 tree = {}
-nodes ,child = set(),set()
 
 for _ in range(N):
     a, l, r = input().split()
     tree[a] = (l , r)
-    nodes.add(a)
-    if l != ".":
-        child.add(l)
-    if r != ".":
-        child.add(r)
-            
-root = (nodes-child).pop()
+
 
 def preorder(node):
     if node == '.':
@@ -37,8 +30,8 @@ def postorder(node):
     postorder(tree[node][1])
     print(node, end="")
     
-preorder(root)
+preorder('A')
 print()
-inorder(root)
+inorder('A')
 print()
-postorder(root)
+postorder('A')
