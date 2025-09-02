@@ -1,36 +1,35 @@
-from collections import deque
-n,m,k,x=map(int,input().split())
+import sys 
+from collections import defaultdict, deque
 
-graph=[[]for _ in range(n+1)]
+input = sys.stdin.readline
+graph = defaultdict(list)
 
-for _ in range(m):
-  a,b=map(int,input().split())
-  graph[a].append(b)
+N, M, K, X = map(int, input().split())   # N은 노드 수, M은 간선 수 , K는 거리 정보 , X는 출발 도시 번호
 
-#거리정보 -1로 초기화
-distance=[-1]*(n+1)
-#현재 노드x를 0으로 선언
-distance[x]=0
+for _ in range(M):
+    s, e = map(int, input().split())
+    graph[s].append(e)
+    
 
-q=deque([x])
+dist=[-1]*(N+1)    
+dist[X] = 0
 
-#큐가 빌 때 까지 bfs반복
+q = deque()
+q.append(X)
+
 while q:
-  now=q.popleft()
+    cur = q.popleft()
+    for next in graph[cur]:
+        if dist[next] == -1:
+            dist[next] = dist[cur]+1
+            q.append(next)
+            
 
-  for i in graph[now]:
-    if distance[i]==-1:
-        distance[i]=distance[now]+1
-        q.append(i)  
+ans = [v for v in range(1,N+1) if dist[v] == K]
 
-
-check=False
-for i in range(1,n+1):
-  if distance[i]==k:
-    print(i)
-    check=True
-
-if check==False:
-  print(-1)
-
-
+if ans:
+    ans.sort()
+    for i in ans:
+        print(i)
+else:
+    print(-1)
