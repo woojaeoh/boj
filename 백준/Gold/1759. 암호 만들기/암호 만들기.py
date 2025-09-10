@@ -10,21 +10,12 @@ password.sort()
 
 vowels = set("aeiou")
 
-
-#password_poten = combinations(password, L)
-def backtracking(idx, curr, vow, cons): #백트래킹 -> 재귀
-       
-    if len(curr) == L:
-        if vow >=1 and cons >=2:
-            print(''.join(curr))
-        return
-            
-    for i in range(idx ,C):
-        ch = password[i]
-        if ch in vowels:
-            backtracking(i+1, curr + [ch], vow+1, cons)
+for comb in combinations(password, L):
+    vcs, cons =0, 0
+    for k in comb:
+        if k in vowels:
+            vcs +=  1
         else:
-            backtracking(i+1, curr + [ch], vow, cons+1)
-    
-
-backtracking(0, [], 0, 0)
+            cons += 1
+    if vcs >=1 and cons>=2:
+        print(''.join(comb))
