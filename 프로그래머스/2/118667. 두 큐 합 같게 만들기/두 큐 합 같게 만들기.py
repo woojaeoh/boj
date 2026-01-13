@@ -5,13 +5,13 @@ def solution(queue1, queue2):
     q1 = deque(queue1)
     q2 = deque(queue2)
     
-    length = len(queue1) + len(queue2)
+    length = len(queue1) * 3
 
     
     s1 = sum(q1)
     s2 = sum(q2)    
     
-    while count < length*2:        
+    while count < length*3:        
         
         if s1 == s2:
             return count
