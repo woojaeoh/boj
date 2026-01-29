@@ -13,8 +13,9 @@ class Solution:
                 if cur_node not in costs:
                     costs[cur_node] = cur_cost
                 for next_node, cost in graph[cur_node]:
-                    next_cost = cost + cur_cost    
-                    heapq.heappush(pq, (next_cost, next_node))
+                    if next_node not in costs:
+                        next_cost = cost + cur_cost    
+                        heapq.heappush(pq, (next_cost, next_node))
             
             for i in range(n):
                 if (i+1) not in costs:
