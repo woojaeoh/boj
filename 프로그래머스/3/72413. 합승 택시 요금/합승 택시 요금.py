@@ -2,44 +2,45 @@ from collections import defaultdict
 import heapq
 
 def solution(n, s, a, b, fares):
- 
+    
     graph = defaultdict(list)
-    for i, j ,w in fares:
-        graph[i].append((j, w))
-        graph[j].append((i, w))
+    for u,v,w in fares:
+        graph[u].append((v, w))
+        graph[v].append((u, w))
         
-    def dijkstra(start):
+    def dijkstra(start, end):
         
-        costs = [float('inf')] * (n+1)
+        costs= [float('inf')]*(n+1)
         pq = []
-           
         heapq.heappush(pq, (0, start))
-        costs[start] = 0
+        costs[start] = 0 
         
         while pq:
-            cur_cost, node = heapq.heappop(pq)      
+            cur_cost, node = heapq.heappop(pq)    
             
-            if cur_cost > costs[node]:
+            if cur_cost > costs[node] :
                 continue
+            
+            for next_node, weight in graph[node]:
                 
-            for next_node , cost in graph[node]:
-                next_cost = cur_cost + cost
-                
+                next_cost = weight + cur_cost
                 if next_cost < costs[next_node]:
+                    
                     costs[next_node] = next_cost
-                    heapq.heappush(pq, (next_cost , next_node))
-        
-        
-        return costs  
+                    heapq.heappush(pq, (next_cost, next_node))
+                    
+        return costs
     
-  
-    #final + 다익스트라_alone 2번각각 중에 최소
     result = float('inf')
-    dist_from_s = dijkstra(s)               
-    dist_from_a = dijkstra(a)
-    dist_from_b = dijkstra(b)
     
     for i in range(1, n+1):
-        result = min(result, dist_from_s[i] + dist_from_a[i] + dist_from_b[i])                
+        go_i = dijkstra(s, i)
+        go_a = dijkstra(i, a)
+        go_b = dijkstra(i, b)
+        
+        result = min(result, go_i[i] + go_a[a] + go_b[b])
         
     return result
+        
+    
+ 
