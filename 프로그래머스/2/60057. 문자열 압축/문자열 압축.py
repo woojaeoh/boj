@@ -1,28 +1,32 @@
 def solution(s):  
-    answer = len(s)
-    #1개 단위(step)부터 압축 단위를 늘려가며 확인
-    for step in range(1,len(s)//2+1):
-        compressed=""
-        prev=s[0:step] #앞에서부터 step만큼의 문자열 추출
-        count= 1
-        #단위(step) 크기만큼 증가시키며 이전 문자열과 비교
-        for j in range(step,len(s),step):
-            #prev문자열과 뒷 문자열(같은크기임)이 동일하다면 count 1증가 
-            if prev == s[j:j+step]:
-                count+=1
-            #다른 문자열이 나왔다면 다음 단계로 넘어감
+    
+    def compress(text, unit):
+        
+        words = [text[i:i+unit] for i in range(0, len(text), unit)]
+        compressed = ""
+        prev_word = ""
+        count = 0 
+        
+        for word in words:
+            if word == prev_word:
+                count += 1
             else:
-                compressed +=str(count)+prev if count >=2 else prev
-                prev=s[j:j+step] #다시 상태 초기화
-                count=1
+                if count > 1:
+                    compressed += str(count)
+                compressed += prev_word
+                #새 패턴 시작
+                prev_word = word
+                count = 1
                 
-        #남아있는 문자열에 대한 처리
-        compressed+= str(count) +prev if count>=2 else prev
-        #만들어지는 압축 문자열이 가장 짧은 것이 정답.
-        answer = min(answer,len(compressed))
-
+        if count >1: #마지막 부분이 압축 가능한 word일때 , 마지막 문자열 처리를 해줘야 한다.
+            compressed += str(count)
+            
+        compressed += prev_word
         
+        return len(compressed)
                 
+    n = len(s)
+    if n ==1:
+        return 1
         
-        
-    return answer
+    return min(compress(s, unit) for unit in range(1, n // 2 + 1))
