@@ -1,16 +1,28 @@
+from collections import defaultdict
+
 def solution(id_list, report, k):
-    answer=[0]*len(id_list) #입력받는 사람들의 리스트
-    reported={x:0 for x in id_list} #신고한 사람들을 카운트 하기위한
+    n = len(id_list)
+    memo = defaultdict(list)
+    reported_list = defaultdict(list)
+    member ={}
     
-    for r in set(report): #중복을 없애주기 위해 set함수 이용
-        a,b= r.split()
-        reported[b] += 1
+    for i, id in enumerate(id_list):
+        reported_list[id] = 0
+        member[id] = i
         
-    for r in set(report):
-        a,b= r.split()
-        if reported[b]>=k:
-            answer[id_list.index(a)] +=1
+    for rep in set(report):
+        a, b = rep.split()
+        memo[a] = b #중복 신고 ->자동으로 중복 제거.
+        reported_list[b] += 1
+    
+    answer =[0] * n 
+    for rep in set(report):
+        reporter, reported = rep.split()
+        if reported_list[reported] >= k:
+            answer[member[reporter]] +=1
+        
+    
             
-    return answer
+            
     
     return answer
