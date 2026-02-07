@@ -1,32 +1,31 @@
 def solution(s):  
-    
-    def compress(text, unit):
-        
-        words = [text[i:i+unit] for i in range(0, len(text), unit)]
-        compressed = ""
-        prev_word = ""
-        count = 0 
-        
-        for word in words:
-            if word == prev_word:
+    n = len(s) // 2 + 1
+    result = float('inf')
+  
+    for i in range(1, n+1): #자르는 단위
+        answer = ""
+        prev = ""
+        count = 1
+        for j in range(0, len(s) , i): #문자열 인덱스
+            cur = s[j : j + i]
+            
+            if prev == cur :
                 count += 1
             else:
                 if count > 1:
-                    compressed += str(count)
-                compressed += prev_word
-                #새 패턴 시작
-                prev_word = word
+                    answer += str(count)
+                
+                answer += prev
+                prev = cur
                 count = 1
                 
-        if count >1: #마지막 부분이 압축 가능한 word일때 , 마지막 문자열 처리를 해줘야 한다.
-            compressed += str(count)
+        if count > 1:
+            answer += str(count)
+        answer += prev
             
-        compressed += prev_word
+            
+                    
+        result = min(result, len(answer))
         
-        return len(compressed)
-                
-    n = len(s)
-    if n ==1:
-        return 1
-        
-    return min(compress(s, unit) for unit in range(1, n // 2 + 1))
+    return result
+            
