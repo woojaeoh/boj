@@ -1,28 +1,25 @@
 from collections import defaultdict
-
 def solution(id_list, report, k):
-    n = len(id_list)
-    memo = defaultdict(list)
+    set_report = set(report)
+    member = {}
     reported_list = defaultdict(list)
-    member ={}
+    whoreport = defaultdict(list)
+    result =[0] * len(id_list)
     
-    for i, id in enumerate(id_list):
-        reported_list[id] = 0
-        member[id] = i
+    for i, p in enumerate(id_list):
+        member[p] = i
+        reported_list[p] = 0
+    
+    
+    for p in set_report:
+        reporter, reported = p.split()
+        whoreport[reporter].append(reported)
+        reported_list[reported] += 1 
         
-    for rep in set(report):
-        a, b = rep.split()
-        memo[a] = b #중복 신고 ->자동으로 중복 제거.
-        reported_list[b] += 1
-    
-    answer =[0] * n 
-    for rep in set(report):
-        reporter, reported = rep.split()
+    for p in set_report:
+        reporter, reported = p.split()
         if reported_list[reported] >= k:
-            answer[member[reporter]] +=1
-        
-    
-            
+            result[member[reporter]] += 1
             
     
-    return answer
+    return result
