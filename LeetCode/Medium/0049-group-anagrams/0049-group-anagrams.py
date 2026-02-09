@@ -1,12 +1,18 @@
 from collections import defaultdict
+
 class Solution:
     def groupAnagrams(self, strs: List[str]) -> List[List[str]]:
-
-        memo = defaultdict(list) # 존재하지 않는 키에 대해 접근 할 수 있도록 하는 dict 
+        dict = defaultdict(list)
+        
+        #키를 추가해준다.
         for s in strs:
-            key = ''.join(sorted(s)) 
-            memo[key].append(s)
+            key = ''.join(sorted(s))
+            dict[key].append(s)
 
-        print(memo)
-        return list(memo.values())
-                
+
+            #print(s)
+        return list(dict.values())
+    
+    
+            
+                            
