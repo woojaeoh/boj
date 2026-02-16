@@ -1,15 +1,14 @@
 class Solution:
     def uniquePaths(self, m: int, n: int) -> int:
-        memo = {}
-        def dp(x, y):
-            if x == 0 or y ==0:
-                memo[(x,y)] = 1
-                return memo[(x,y)] 
-    
-            if (x,y) not in memo:
-                memo[(x,y)] = dp(x-1, y) + dp(x, y-1)
+        memo ={}
+        def dp(i, j):
+            if i == 0 or j ==0:
+                return 1
+
+            if (i,j) not in memo:
+                memo[(i, j)] = dp(i-1, j) + dp(i, j-1)    
             
-            return memo[(x,y)]
+            return memo[(i,j)]
 
-
+    
         return dp(m-1, n-1)
