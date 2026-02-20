@@ -1,27 +1,39 @@
+from collections import defaultdict
 def solution(n, wires):
-    answer = n
     
+    graph = defaultdict(list)
     
-    def dfs(v, graph, visited):
-        visited[v] = True
-        count = 1
-        for i in graph[v]:
-            if not visited[i]:
-                count += dfs(i, graph, visited)
-                
-        return count 
-
-    for cut_u, cut_v in wires:
-        
-        graph =[[] for _ in range(n)]
-        visited = [False] * n
-        for u, v in wires:
-            if (u, v) == (cut_u, cut_v) or (u, v) ==(cut_v, cut_u) :
-                continue
-            
-            graph[u-1].append(v-1)
-            graph[v-1].append(u-1)
-            
-        answer = min(answer, abs(n - 2 *dfs(0, graph, visited)))
-        
-    return answer
+    for u,v in wires:
+        graph[u].append(v)
+        graph[v].append(u)
+    
+    visited = [False] * (n+1)
+    cost = [1] * (n+1)
+    parent = [0] * (n+1)
+    visited[1] = True
+    stack = [1]
+    order =[]
+    
+    while stack:
+        node = stack.pop()
+        order.append(node)
+        for v in graph[node]:
+            if not visited[v]:
+                parent[v] = node
+                visited[v] = True
+                stack.append(v)
+    
+    for node in reversed(order):
+        if parent[node] != 0:
+            cost[parent[node]] += cost[node]
+    
+    total = cost[1]
+    target = total /2
+    min_diff = float('inf')
+    
+    for i in range(1, n+1):
+        diff = abs(target - cost[i])    
+        min_diff = min(min_diff, diff)
+    print(order)
+    print(cost)
+    return 2 * min_diff
