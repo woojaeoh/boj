@@ -1,40 +1,33 @@
-from collections import deque
+from collections import deque, defaultdict
 
 class Solution:
     def findOrder(self, numCourses: int, prerequisites: List[List[int]]) -> List[int]:
-        result = [] #결과 반환용
+        
+        indegree =[0] * numCourses
+        graph = defaultdict(list)
+        visited = [False] * numCourses
+        result = []
 
-        indegree =[0] * (numCourses)
-        graph = [[] for _ in range(numCourses)]
-        visited =[]
-
-        for i, j in prerequisites:
-            indegree[i] += 1
-            graph[j].append(i)
+        for u,v in prerequisites:
+            indegree[u] += 1
+            graph[u].append(v)
+            graph[v].append(u)
 
         q = deque()
-
+        
         for i in range(numCourses):
             if indegree[i] == 0:
                 q.append(i)
+                visited[i] = True
 
         while q:
-            cur_v = q.popleft()
-            result.append(cur_v)
+            node = q.popleft()
+            result.append(node)
+            for v in graph[node]:
+                indegree[v] -= 1
+                if indegree[v] == 0:
+                    q.append(v)
+                    visited[v] = True
 
-            for node in graph[cur_v]:
-                indegree[node] -= 1
-                
-                if indegree[node] == 0 :
-                    q.append(node)
-
-        print(result)
-
+        
         return result if len(result) == numCourses else []
-
-
-        
-
-
-
-        
