@@ -2,39 +2,45 @@ import heapq
 from collections import defaultdict
 def solution(n, paths, gates, summits):
     
+    #접근 방식 -> 출발점부터 5번까지 가는 경로중에 최소 값을 찾는다.
+    #가는 가중치가 5,4 ,3,4 이면 그중 최대가 intensity이고
+    #그 경로들의intensity중에 가장 최소치가 되는 값과, 산봉우리를 리턴해라.
+    # 다중 진입점 다익스트라 -> 시작점을 모두 큐에 넣는다.
     graph = defaultdict(list)
-    for i ,j ,w in paths:
-        graph[i].append((w, j))
-        graph[j].append((w, i))
-    
-    costs = [float('inf')] * (50001)
-    heap = []
+    visited = [10000001] * (n+1)
+    for i, j ,w in paths:
+        graph[i].append((j,w))
+        graph[j].append((i,w))
+        
+    summit_set = set(summits)
+        
+    pq =[]
     
     for gate in gates:
-        heapq.heappush(heap, (0, gate))
-        costs[gate] = 0
+        heapq.heappush(pq, (0, gate))
+        visited[gate] = 0
         
-    set_summit = set(summits)
+    while pq:
+        cur_cost, node = heapq.heappop(pq)
         
-    while heap:
-        weight, node = heapq.heappop(heap) #가중치 , 노드
-        
-        # 기존에 방문한 경로보다 가중치가 작은 경우 -> 중단(갈 필요 X)
-        if costs[node] < weight  or node in set_summit: # 이미 산봉우리에 도착한 경우 -> 중단
+        if cur_cost > visited[node] or node in summit_set:
             continue
             
-        for next_weight, next_node in graph[node]:
-            new_intensity = max(weight, next_weight)
-            if new_intensity < costs[next_node] :
-                heapq.heappush( heap, (new_intensity , next_node))
-                costs[next_node] = new_intensity
+        for next_v, cost in graph[node]:
+            next_intensity = max(cur_cost, cost)
+            if next_intensity < visited[next_v]:
+                visited[next_v] =  next_intensity
+                heapq.heappush(pq, (next_intensity, next_v))
+           
     
-    result = [0, 100000001]
-    for summit in sorted(summits):
-        if costs[summit] < result[1]:
-            result = [summit, costs[summit]]
-            
+    # visited[summits]중에 가장 작은 값과 그떄 summit을 찾는다
+    result = [-1, 10000001]
+    for summit in sorted(summit_set):
+        if visited[summit] < result[1]:
+            result[0] = summit
+            result[1] = visited[summit]
     
+        
     return result
         
                 
