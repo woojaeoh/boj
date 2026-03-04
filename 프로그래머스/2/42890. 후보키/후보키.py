@@ -1,50 +1,55 @@
 from itertools import combinations
 def solution(relation):
-    answer = 0
-    m = len(relation) # 인스턴스 수
-    n = len(relation[0]) # 컬럼 수
+    #[["100","ryan","music","2"],["200","apeach","math","2"],["300","tube","computer","3"],["400","con","computer","4"],["500","muzi","music","3"],["600","apeach","music","2"]]
+    n = len(relation[0])
+    m = len(relation)
     
-    candidate_keys=[]
+    candidate_keys = [] #후보키로 선정된 것
     
-    #이건 그냥 combination 라이브러리쓰는게 훨신 나을것 같긴함.
-    #복습할때 combination으로 해결해보기
-    
-#     def get_combinations(start, depth, max_depth, curr, result_combs):
-#         if depth == max_depth:
-#             result_combs.append(curr[:])
-#             return 
+    def get_combinations(start, curr, depth, comb):
         
-#         for i in range(start, n):
-#             curr.append(i)
-#             get_combinations(i+1, depth+1, max_depth, curr, result_combs)
-#             curr.pop()
-            
-    num_list = [ i for i in range(n)]
-    
-    for length in range(1, n+1):
-        result = []
+        #base case
+        if len(curr) == depth:
+            comb.append(curr[:])
+            return 
         
-        #get_combinations(0,0,length, [], combinations) #탐색은 그저 조합을 만들기 위한 용도
-        result = list(combinations(num_list, length))
-        for cols in result:
-            minimality = True #최소성 검사용
-            row_set = set() 
+        for i in range(start, n):
+            curr.append(i)
+            get_combinations(i+1,curr, depth, comb)
+            curr.pop()
+    
+    for cur_depth in range(1, n+1):
+        combinations = []
+        
+        get_combinations(0, [], cur_depth, combinations)
+        
+        for cols in combinations: 
+            row_set = set()
+            minimality = True
             
-            for key in candidate_keys:
-                if set(key).issubset(set(cols)):
+            for keys in candidate_keys:
+                if set(keys).issubset(set(cols)):
                     minimality = False
                     break
-            
+               
             if not minimality:
                 continue
-            
+                    
+         
             for r in relation:
-                row_str= ""
+                row_str = ""          
                 for c in cols:
-                    row_str += " "+ r[c]
+                    row_str += r[c]
                 row_set.add(row_str)
                 
             if len(row_set) == m:
                 candidate_keys.append(cols)
-    
+                
+                
     return len(candidate_keys)
+            
+        
+        
+
+        
+    
