@@ -1,41 +1,46 @@
 import sys
 
 input = sys.stdin.readline
-n = int(input())
-number = list(map(int, input().split()))
+N = int(input())
 
-plus, minus, mul, div = map(int, input().split())  # 2 1 1 1
+num = list(map(int, input().split()))
+op = list(map(int, input().split()))
 
-max_num = -10**9 -1
-min_num = 10**9 +1
 
-def backtracking(idx, curr ,plus, minus ,mul, div ):
-    global max_num, min_num
+min_ans = float('inf')
+max_ans = float('-inf')
+
+#  +++--*/ -> 여기서 N-1개 뽑기?
+
+def backtrack(idx, total):
+    global min_ans, max_ans
     
-    if n == idx:
-        max_num = max(max_num, curr)
-        min_num = min(min_num, curr)
-        
-
-    if plus > 0:
-        backtracking(idx+1, curr + number[idx], plus-1,minus, mul, div )
+    if idx == N:
+        min_ans = min(min_ans , total) 
+        max_ans = max(max_ans , total)
+        return
     
-    if div >0:
-        if curr < 0:
-            backtracking(idx+1, -(-curr//number[idx]), plus, minus, mul, div - 1)
-        else:   
-            backtracking(idx+1, curr // number[idx], plus, minus, mul, div - 1)
-        
-    if minus > 0:
-        backtracking(idx+1, curr - number[idx], plus, minus -1, mul, div)
-        
-    if mul > 0:
-        backtracking(idx+1, curr * number[idx], plus, minus, mul-1 , div)
-        
-        
+    if op[0] > 0:
+        op[0] -= 1
+        backtrack(idx+1, total + num[idx])
+        op[0] += 1
     
+    if op[1] > 0:
+        op[1] -= 1
+        backtrack(idx+1, total - num[idx])
+        op[1] += 1
+        
+    if op[2] > 0:
+        op[2] -= 1
+        backtrack(idx+1, total * num[idx])
+        op[2] += 1
     
-backtracking(1 ,number[0], plus, minus, mul, div)
-
-print(max_num)
-print(min_num)
+    if op[3] > 0:
+        op[3] -= 1
+        backtrack(idx+1, int(total / num[idx]))
+        op[3] += 1    
+    
+backtrack(1, num[0])      
+        
+print(max_ans)
+print(min_ans)
